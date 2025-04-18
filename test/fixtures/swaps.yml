@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  swap_group: one
+  title: MyString
+  theme: MyString
+  deadline: 2025-04-17 20:34:50
+  status: MyString
+  rules: MyText
+
+two:
+  swap_group: two
+  title: MyString
+  theme: MyString
+  deadline: 2025-04-17 20:34:50
+  status: MyString
+  rules: MyText

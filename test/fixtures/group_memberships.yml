@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  swap_group: one
+  user: one
+  group_role: MyString
+
+two:
+  swap_group: two
+  user: two
+  group_role: MyString
