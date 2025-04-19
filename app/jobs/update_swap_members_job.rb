@@ -14,16 +14,16 @@ class UpdateSwapMembersJob < ApplicationJob
 
       emails.each do |email|
         signup = SwapSignup.find_or_initialize_by(email: email.downcase, swap: swap)
-      
+
         user = User.find_by(email: email)
         signup.user = user if user && signup.user.nil?
         signup.save!
-      
+
         if user && !swap.users.include?(user)
           swap.users << user
           Rails.logger.info "Added #{user.email} to #{swap.title}"
         end
-      end      
+      end
     end
   end
 end

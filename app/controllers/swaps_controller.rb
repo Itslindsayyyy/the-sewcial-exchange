@@ -1,12 +1,12 @@
 class SwapsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create, :index]
+  before_action :authenticate_user!, only: [ :new, :create, :index ]
   before_action :set_swap, only: %i[ show edit update destroy ]
 
   def new
     @swap = Swap.new
     @swap.swap_tasks.build # to show one task field by default
   end
-  
+
 
   def index
     @swaps = Swap.all
@@ -25,15 +25,15 @@ end
   def edit
     @selected_themes = @swap.theme.to_s.split(",").map(&:strip)
   end
-  
+
 
   def create
     @swap = Swap.new(swap_params)
     @swap.created_by_id = current_user.id
-  
+
     # convert theme array to comma-separated string if needed
     @swap.theme = @swap.theme.join(", ") if @swap.theme.is_a?(Array)
-  
+
     # Use shipping deadline as default for deadline
     @swap.deadline = @swap.shipping_deadline if @swap.deadline.blank?
 
@@ -44,9 +44,9 @@ end
       render :new, status: :unprocessable_entity
     end
   end
-  
-  
-  
+
+
+
 
   def update
     if params[:swap][:theme].is_a?(Array)
@@ -95,8 +95,7 @@ end
         :deadline,
         theme: [],
 
-        swap_tasks_attributes: [:id, :task_name, :due_date, :_destroy]
+        swap_tasks_attributes: [ :id, :task_name, :due_date, :_destroy ]
       )
     end
-    
 end

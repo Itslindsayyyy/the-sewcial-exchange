@@ -15,7 +15,7 @@ gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-#gem "tailwindcss-rails"
+# gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
@@ -64,14 +64,14 @@ group :test do
   gem "selenium-webdriver"
 end
 
-#for password hashing
-gem 'bcrypt', '~> 3.1.7'
+# for password hashing
+gem "bcrypt", "~> 3.1.7"
 
-#auth
-gem 'devise'
+# auth
+gem "devise"
 
 # Google Sheets/Forms connection
-gem 'google_drive', '~> 3.0'
+gem "google_drive", "~> 3.0"
 
 # auto schedule pulls from google sheets.
-gem 'clockwork'
+gem "clockwork"

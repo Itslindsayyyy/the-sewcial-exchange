@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   # GET /account
   def show
     @user = current_user
-  
+
     # Swaps the user is hosting
     @hosted_swaps = Swap.where(created_by_id: current_user.id)
 

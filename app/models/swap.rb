@@ -17,7 +17,7 @@ class Swap < ApplicationRecord
     with: VALID_SHEET_URL_REGEX,
     message: "must be a valid Google Sheet link (starting with https://docs.google.com/spreadsheets/d/...)"
   }, allow_blank: true
-  
+
   # Automatically set sheet_id from sheet_url if it's present
   before_validation :set_sheet_id_from_url
 
@@ -27,7 +27,7 @@ class Swap < ApplicationRecord
     return if self.sheet_url.blank?
     self.sheet_id = extract_sheet_id_from_url(self.sheet_url)
   end
-  
+
 
   def extract_sheet_id_from_url(url)
     url.match(/\/spreadsheets\/d\/(.*?)\//)[1]
