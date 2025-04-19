@@ -1,0 +1,119 @@
+<div class="container py-5">
+  <h2 class="fw-bold mb-4">Create a Swap</h2>
+
+  <%= form_with model: @swap, local: true, html: { multipart: true } do |form| %>
+    <!-- Title -->
+    <div class="mb-4">
+      <%= form.label :title, class: "fw-semibold" %>
+      <%= form.text_field :title, class: "form-control" %>
+    </div>
+
+    <!-- Theme -->
+    <div class="mb-4">
+      <span class="fw-semibold d-block mb-2">Theme:</span>
+      <% selected = @selected_themes || [] %>
+      
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_mini_quilt" value="mini quilt">
+        <label class="form-check-label" for="theme_mini_quilt">mini quilt</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_seasonal" value="seasonal">
+        <label class="form-check-label" for="theme_seasonal">seasonal</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_blocks" value="blocks">
+        <label class="form-check-label" for="theme_blocks">blocks</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_other" value="other">
+        <label class="form-check-label" for="theme_other">other</label>
+      </div>
+    </div>
+
+    <!-- Upload Photo -->
+    <div class="mb-4">
+      <span class="fw-semibold d-block mb-2">Swap Image:</span>
+      <%= form.file_field :image, class: "form-control w-auto d-inline-block" %>
+    </div>
+
+    <!-- Google Form URL -->
+    <div class="mb-4">
+      <%= form.label :form_url, "Google Sign-up Form URL", class: "fw-semibold" %>
+      <%= form.url_field :form_url, class: "form-control" %>
+    </div>
+
+    <!-- Dates -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <%= form.label :start_date, class: "fw-semibold" %>
+        <%= form.date_field :start_date, class: "form-control" %>
+      </div>
+      <div class="col-md-6">
+        <%= form.label :shipping_deadline, class: "fw-semibold" %>
+        <%= form.date_field :shipping_deadline, class: "form-control" %>
+      </div>
+    </div>
+
+    <!-- Hashtags -->
+    <div class="mb-4">
+      <span class="fw-semibold d-block mb-1">Hashtags: <span class="text-muted small">(optional)</span></span>
+      <%= form.text_field :hashtag_1, class: "form-control mb-2", placeholder: "hashtag 1" %>
+      <%= form.text_field :hashtag_2, class: "form-control mb-2", placeholder: "hashtag 2" %>
+      <%= form.text_field :hashtag_3, class: "form-control mb-2", placeholder: "hashtag 3" %>
+    </div>
+
+    <!-- Tasks -->
+    <div class="mb-4">
+    <span class="fw-semibold d-block mb-2">Tasks:</span>
+  
+    <div id="tasks-container">
+      <div class="row mb-2 task-row">
+        <div class="col-md-6">
+          <input type="text" name="swap[tasks_attributes][][name]" class="form-control" placeholder="Task name">
+        </div>
+        <div class="col-md-6">
+          <input type="date" name="swap[tasks_attributes][][due_date]" class="form-control" placeholder="Due date">
+        </div>
+      </div>
+    </div>
+  
+    <button type="button" id="add-task" class="btn btn-outline-info btn-sm mt-2">+ Add Another Task</button>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addTaskBtn = document.getElementById("add-task");
+    const tasksContainer = document.getElementById("tasks-container");
+
+    addTaskBtn.addEventListener("click", function () {
+      const newTaskRow = document.createElement("div");
+      newTaskRow.classList.add("row", "mb-2", "task-row");
+
+      newTaskRow.innerHTML = `
+        <div class="col-md-6">
+          <input type="text" name="swap[tasks_attributes][][name]" class="form-control" placeholder="Task name">
+        </div>
+        <div class="col-md-6">
+          <input type="date" name="swap[tasks_attributes][][due_date]" class="form-control" placeholder="Due date">
+        </div>
+      `;
+
+      tasksContainer.appendChild(newTaskRow);
+    });
+  });
+</script>
+
+
+    <!-- Rules -->
+    <div class="mb-5">
+      <%= form.label :rules, class: "fw-semibold" %>
+      <%= form.text_area :rules, rows: 4, class: "form-control", placeholder: "insert any custom rules or additional information here." %>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center">
+      <%= form.submit "Create Swap", class: "btn btn-primary rounded-pill px-5 py-2 fw-semibold" %>
+    </div>
+  <% end %>
+</div>

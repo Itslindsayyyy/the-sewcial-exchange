@@ -1,0 +1,42 @@
+<%= form_with(model: swap_task, class: "contents") do |form| %>
+  <% if swap_task.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(swap_task.errors.count, "error") %> prohibited this swap_task from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% swap_task.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :swap_id %>
+    <%= form.text_field :swap_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap_task.errors[:swap_id].none?, "border-red-400 focus:outline-red-600": swap_task.errors[:swap_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :task_name %>
+    <%= form.text_field :task_name, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap_task.errors[:task_name].none?, "border-red-400 focus:outline-red-600": swap_task.errors[:task_name].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :due_date %>
+    <%= form.date_field :due_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap_task.errors[:due_date].none?, "border-red-400 focus:outline-red-600": swap_task.errors[:due_date].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :assigned_to_user_id %>
+    <%= form.text_field :assigned_to_user_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap_task.errors[:assigned_to_user_id].none?, "border-red-400 focus:outline-red-600": swap_task.errors[:assigned_to_user_id].any?}] %>
+  </div>
+
+  <div class="my-5 flex items-center gap-2">
+    <%= form.label :completed %>
+    <%= form.checkbox :completed, class: ["block shadow-sm rounded-md border order-first h-5 w-5", {"border-gray-400 focus:outline-blue-600": swap_task.errors[:completed].none?, "border-red-400 focus:outline-red-600": swap_task.errors[:completed].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

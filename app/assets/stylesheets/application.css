@@ -1,10 +1,108 @@
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
+/* application.css */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+.hero2 img {
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.hero1 {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  position: absolute;
+  bottom: -2rem; /* ⬅️ middle of button height overlaps image edge */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.navbar-brand {
+  padding-left: 0;
+}
+
+#navbarMain .form-control {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1.25rem;
+}
+
+#navbarMain .nav-link {
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+}
+
+.profile-icon {
+  font-size: 2.25rem;
+  color: #367896;
+}
+
+.btn {
+  background-color: #367896;
+  color: #ffffff;
+  font-size: large;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  white-space: nowrap;
+  width: auto;
+  max-width: none;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  text-decoration: underline;
+  background-color: #367896;
+  color:#ffffff;
+  transform: translateY(-4px);
+}
+
+.btn-sewcial {
+  background-color: #367896;
+  color: #ffffff;
+  font-size: 2rem;       /* desktop size */
+  padding: 1.2rem 3rem;     /* desktop padding */
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  white-space: nowrap;
+  width: auto;
+  max-width: none;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn-sewcial:hover,
+.btn-sewcial:focus,
+.btn-sewcial:active {
+  text-decoration: underline;
+  background-color: #367896;
+  color:#ffffff;
+  transform: translateY(-4px);
+}
+
+/* 🔽 Mobile-specific button styles */
+@media (max-width: 576px) {
+  .btn-sewcial {
+    font-size: 1.1rem;       /* smaller font */
+    padding: 0.6rem 1.5rem;  /* tighter padding */
+  }
+}
+
+@media (max-width: 576px) {
+  .btn {
+    font-size: 1.1rem;       /* smaller font */
+    padding: 0.6rem 1.5rem;  /* tighter padding */
+  }
+}
+
+@media (min-width: 992px) {
+  #navbarMain .form-control {
+    margin-bottom: 0;
+  }
+}

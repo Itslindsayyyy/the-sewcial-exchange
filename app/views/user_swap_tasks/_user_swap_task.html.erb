@@ -1,0 +1,14 @@
+<div id="<%= dom_id user_swap_task %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">User:</strong>
+    <%= user_swap_task.user_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Swap task:</strong>
+    <%= user_swap_task.swap_task_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Completed:</strong>
+    <%= user_swap_task.completed? ? "Yes" : "No" %>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="container my-5">
+  <h2 class="fw-bold mb-4">Browse & Join Open Swaps</h2>
+
+  <% if @swaps.any? %>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Swap</th>
+            <th>Theme</th>
+            <th>Ship By</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @swaps.each do |swap| %>
+            <tr>
+              <td class="d-flex align-items-center gap-3">
+                <% if swap.image.attached? %>
+                <%= image_tag swap.image.variant(resize_to_fill: [60, 60]), class: "rounded border", alt: "#{swap.title} image" %>
+              <% else %>
+                <%= image_tag "default_swap.jpg", size: "60x60", class: "rounded border", alt: "Default swap photo" %>
+              <% end %>
+            
+                <%= swap.title %>
+              </td>
+              <td><%= swap.theme %></td>
+              <td><%= swap.deadline&.strftime("%b %d, %Y") || "TBD" %></td>
+              <td>
+                <% if swap.form_url.present? %>
+                  <%= link_to "learn more and join", swap.form_url, class: "btn btn-info rounded-pill", target: "_blank", rel: "noopener" %>
+                <% else %>
+                  <span class="text-muted">No form available</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-muted fst-italic">There are no open swaps available right now. Check back soon!</p>
+  <% end %>
+</div>

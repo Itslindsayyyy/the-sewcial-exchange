@@ -1,17 +1,154 @@
-<% content_for :title, "Showing user" %>
+<div class="container py-5">
+  <div class="row">
+    <!-- Left Column: Profile Info -->
+    <div class="col-md-8">
+      <div class="d-flex align-items-center mb-4">
+        <% if @user.image.attached? %>
+          <%= image_tag @user.image.variant(resize_to_fill: [120, 120]), class: "rounded-circle me-3 border", alt: "#{@user.first_name} profile photo" %>
+        <% else %>
+          <%= image_tag "default_profile.png", size: "120x120", class: "rounded-circle me-3 border", alt: "Default profile photo" %>
+        <% end %>
 
-<div class="md:w-2/3 w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
+        <div>
+          <h3 class="mb-0 fw-bold"><%= @user.display_name.presence || "#{@user.first_name} #{@user.last_name}" %></h3>
+          <p class="text-muted mb-0"><%= @user.state %>, United States</p>
+        </div>
+      </div>
 
-  <h1 class="font-bold text-4xl">Showing user</h1>
+      <%= form_with model: @user, url: account_path, method: :patch, local: true do |form| %>
+        <h4 class="fw-bold mb-3">Account Details</h4>
 
-  <%= render @user %>
+        <!-- Name -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <%= form.label :first_name, class: "fw-semibold" %>
+            <%= form.text_field :first_name, class: "form-control" %>
+          </div>
+          <div class="col-md-6">
+            <%= form.label :last_name, class: "fw-semibold" %>
+            <%= form.text_field :last_name, class: "form-control" %>
+          </div>
+        </div>
 
-  <%= link_to "Edit this user", edit_user_path(@user), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to users", users_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <div class="sm:inline-block mt-2 sm:mt-0 sm:ml-2">
-    <%= button_to "Destroy this user", @user, method: :delete, class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+        <!-- Mailing Address -->
+        <div class="mb-3">
+          <strong>Mailing Address:</strong>
+        </div>
+        <div class="mb-3">
+          <%= form.label :address_line1 %>
+          <%= form.text_field :address_line1, class: "form-control" %>
+        </div>
+        <div class="mb-3">
+          <%= form.label :address_line2 %>
+          <%= form.text_field :address_line2, class: "form-control" %>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <%= form.label :city %>
+            <%= form.text_field :city, class: "form-control" %>
+          </div>
+          <div class="col-md-4">
+            <%= form.label :state %>
+            <%= form.text_field :state, class: "form-control" %>
+          </div>
+          <div class="col-md-4">
+            <%= form.label :zip %>
+            <%= form.text_field :zip, class: "form-control" %>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <%= form.label :email, class: "fw-semibold" %>
+          <%= form.email_field :email, class: "form-control" %>
+        </div>
+
+        <!-- Phone (if added later) -->
+        <!--
+        <div class="mb-3">
+          <%= form.label :phone_number, class: "fw-semibold" %>
+          <%= form.telephone_field :phone_number, class: "form-control" %>
+        </div>
+        -->
+
+        <!-- Social -->
+        <div class="mb-3">
+          <strong>Social Media:</strong>
+        </div>
+        <div class="mb-3">
+          <%= form.label :instagram_url, "Instagram URL" %>
+          <%= form.text_field :instagram_url, class: "form-control" %>
+        </div>
+        <div class="mb-3">
+          <%= form.label :facebook_url, "Facebook URL" %>
+          <%= form.text_field :facebook_url, class: "form-control" %>
+        </div>
+
+        <!-- Display Name -->
+        <div class="mb-3">
+          <%= form.label :display_name %>
+          <%= form.text_field :display_name, class: "form-control" %>
+        </div>
+
+        <!-- Profile Photo -->
+        <div class="mb-4">
+          <%= form.label :image, "Upload New Profile Photo" %>
+          <%= form.file_field :image, class: "form-control" %>
+        </div>
+
+        <!-- Submit -->
+        <%= form.submit "Update Profile", class: "btn btn-warning rounded-pill px-4" %>
+      <% end %>
+    </div>
+
+    <!-- Right Column: Action Buttons -->
+    <div class="col-md-4 mt-4 mt-md-0 text-md-end text-center">
+      <%= link_to "Create a Swap", new_swap_path, class: "btn btn-primary rounded-pill mb-3 px-4 py-2" %>
+      <br>
+      <%= link_to "Join a Swap", swaps_path, class: "btn btn-primary rounded-pill px-4 py-2" %>
+    </div>
   </div>
 </div>
+
+
+<hr class="my-5">
+
+<h3 class="fw-bold mb-4">My Swaps</h3>
+
+<% if @all_user_swaps.any? %>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Swap</th>
+          <th>Status</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @all_user_swaps.each do |swap| %>
+          <tr>
+            <td class="d-flex align-items-center gap-3">
+              <% if swap.image.attached? %>
+                <%= image_tag swap.image.variant(resize_to_fill: [60, 60]), class: "rounded border", alt: "#{swap.title} image" %>
+              <% else %>
+                <%= image_tag "default_swap.jpg", size: "60x60", class: "rounded border", alt: "Default swap photo" %>
+              <% end %>
+              <%= link_to swap.title, swap_path(swap), class: "text-decoration-none fw-semibold" %>
+            </td>
+            <td><%= swap.status.presence || "active" %></td>
+              <td>
+              <% if swap.created_by_id == current_user.id %>
+                Host
+              <% else %>
+                <%= @role_lookup[swap.swap_group_id].capitalize %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted fst-italic">You haven't participated in or hosted a swap yet.</p>
+<% end %>

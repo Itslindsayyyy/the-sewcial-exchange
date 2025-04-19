@@ -1,70 +1,50 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
-  # GET /users or /users.json
-  def index
-    @users = User.all
-  end
-
-  # GET /users/1 or /users/1.json
+  # GET /account
   def show
-  end
+    @user = current_user
+  
+    # Swaps the user is hosting
+    @hosted_swaps = Swap.where(created_by_id: current_user.id)
 
-  # GET /users/new
-  def new
-    @user = User.new
-  end
+    # Swaps the user is moderating or participating in
+    group_memberships = GroupMembership.where(user_id: current_user.id)
+    swap_group_ids = group_memberships.pluck(:swap_group_id)
 
-  # GET /users/1/edit
-  def edit
-  end
-
-  # POST /users or /users.json
-  def create
-    @user = User.new(user_params)
-
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    @role_lookup = group_memberships.each_with_object({}) do |membership, hash|
+      hash[membership.swap_group_id] = membership.group_role
     end
+
+    @joined_swaps = Swap.where(swap_group_id: swap_group_ids)
+
+    # Combine hosted + joined swaps and remove duplicates
+    @all_user_swaps = (@hosted_swaps + @joined_swaps).uniq
   end
 
-  # PATCH/PUT /users/1 or /users/1.json
+
+  # PATCH /account
   def update
+    @user = current_user
+
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: "User was successfully updated." }
-        format.json { render :show, status: :ok, location: @user }
+        format.html { redirect_to account_path, notice: "Your profile was successfully updated." }
+        format.json { render :show, status: :ok, location: account_path }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { render :show, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # DELETE /users/1 or /users/1.json
-  def destroy
-    @user.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to users_path, status: :see_other, notice: "User was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.expect(user: [ :first_name, :last_name, :email, :address_line1, :address_line2, :city, :state, :zip, :instagram_url, :facebook_url, :display_name ])
-    end
+  def user_params
+    params.require(:user).permit(
+      :first_name, :last_name, :email, :address_line1, :address_line2,
+      :city, :state, :zip, :instagram_url, :facebook_url,
+      :display_name, :image
+    )
+  end
 end

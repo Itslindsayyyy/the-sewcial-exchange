@@ -1,0 +1,19 @@
+<% if current_page?(root_path) %>
+  
+<!-- Home Page Hero -->
+  <section class="hero1">
+    <%= image_tag("hero1.jpg", alt: "Page banner", class: "img-fluid w-100") %>
+    
+    <!-- Overlay Buttons -->
+    <div class="hero-buttons position-absolute start-50 d-flex gap-4">
+      <%= link_to "Join a Swap", swaps_path, class: "btn btn-sewcial shadow-lg" %>
+      <%= link_to "Create a Swap", new_swap_path, class: "btn btn-sewcial shadow-lg" %>
+    </div>
+
+  </section>
+<% else %>
+  <!-- Inner Page Hero (Thinner Static Image) -->
+  <section class="hero2">
+    <%= image_tag("hero2.jpg", alt: "Page banner", class: "img-fluid w-100") %>
+  </section>
+<% end %>

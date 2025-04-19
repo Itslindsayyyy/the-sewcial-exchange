@@ -1,0 +1,5 @@
+class AddFormUrlToSwaps < ActiveRecord::Migration[8.0]
+  def change
+    add_column :swaps, :form_url, :string
+  end
+end

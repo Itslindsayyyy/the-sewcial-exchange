@@ -1,0 +1,54 @@
+<!-- Shared Header -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+
+
+    <%= link_to root_path, class: "navbar-brand me-auto" do %>
+      <%= image_tag("logo.png", alt: "The Sewcial Exchange logo", style: "height: 100px;") %>
+    <% end %>
+
+    <!-- Right Side: Profile + Hamburger -->
+
+      <!-- Hamburger Button (always shows collapsed nav) -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+              aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Collapsible Nav Area -->
+  <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
+    <div class="w-100 px-4 pb-3 d-flex flex-column flex-lg-row align-items-center justify-content-lg-end gap-2 gap-lg-3">
+      <!-- Search -->
+      <form class="d-flex me-3 my-2 my-lg-0" role="search" action="<%= swaps_path %>" method="get">
+      <input
+        class="form-control rounded-pill border-warning border-2"
+        type="search"
+        name="query"
+        placeholder="Search"
+        aria-label="Search"
+        value="<%= params[:query] %>"
+        onkeydown="if(event.key === 'Enter') this.form.submit();"
+        style="width: 300px;" 
+      >
+      </form>
+
+      <!-- Profile/Login -->
+      <% if user_signed_in? %>
+        <%= link_to account_path, class: "nav-link d-flex flex-row align-items-center gap-2 p-0 text-nowrap" do %>
+          <i class="bi bi-person-circle profile-icon"></i>
+          <span>Account</span>
+        <% end %>
+      <% else %>
+        <%= link_to new_user_session_path, class: "nav-link d-flex flex-row align-items-center gap-2 p-0 text-nowrap" do %>
+          <i class="bi bi-person-circle profile-icon"></i>
+          <span>Log In</span>
+        <% end %>
+      <% end %>
+      
+      
+    </div>
+  </div>
+</nav>

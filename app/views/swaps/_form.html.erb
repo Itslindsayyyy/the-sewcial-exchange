@@ -1,0 +1,47 @@
+<%= form_with(model: swap, class: "contents") do |form| %>
+  <% if swap.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(swap.errors.count, "error") %> prohibited this swap from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% swap.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :swap_group_id %>
+    <%= form.text_field :swap_group_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap.errors[:swap_group_id].none?, "border-red-400 focus:outline-red-600": swap.errors[:swap_group_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap.errors[:title].none?, "border-red-400 focus:outline-red-600": swap.errors[:title].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :theme %>
+    <%= form.text_field :theme, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap.errors[:theme].none?, "border-red-400 focus:outline-red-600": swap.errors[:theme].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :deadline %>
+    <%= form.datetime_field :deadline, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap.errors[:deadline].none?, "border-red-400 focus:outline-red-600": swap.errors[:deadline].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.text_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap.errors[:status].none?, "border-red-400 focus:outline-red-600": swap.errors[:status].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :rules %>
+    <%= form.textarea :rules, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": swap.errors[:rules].none?, "border-red-400 focus:outline-red-600": swap.errors[:rules].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

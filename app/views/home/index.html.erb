@@ -1,0 +1,40 @@
+<section class="py-5">
+  <div class="container text-left">
+    <h2 class="mb-4">Explore The Sewcial Exchange</h2>
+    <div class="row g-4 justify-content-center">
+      <% @explore_tiles.each do |tile| %>
+        <div class="col-6 col-md-3">
+          <div class="mb-2">
+            <%= image_tag tile[:image], alt: tile[:title], class: "img-fluid rounded", style: "aspect-ratio: 1 / 1; border-radius: 10px;" %>
+          </div>
+          <p class="text-dark fw-medium fs-6"><%= tile[:description] %></p>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="mb-4">What Sewcialites Are Saying</h2>
+    <div class="row g-4 justify-content-center">
+
+      <% [
+        { stars: 5, quote: "I participate in a lot of swaps and this is exactly what I needed to stay organized and not miss a beat!" },
+        { stars: 4, quote: "Love the organization and reminders." },
+        { stars: 5, quote: "I've save so much time running my swaps compared to doing it all myself before! So now I can host larger swaps!" }
+      ].each do |review| %>
+        <div class="col-md-4">
+          <div class="p-4 bg-white rounded shadow-sm h-100">
+            <div class="mb-2 text-warning" style="font-size: 1.25rem;">
+              <%= "★" * review[:stars] + "☆" * (5 - review[:stars]) %>
+            </div>
+            <p class="mb-0">"<%= review[:quote] %>"</p>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</section>
