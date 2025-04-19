@@ -1,17 +1,108 @@
-<% content_for :title, "Showing swap" %>
+<div class="container my-5">
+  <!-- Hero Row: Image + Title Only -->
+  <div class="row align-items-center mb-4">
+    <div class="col-md-2 text-center">
+      <% if @swap.image.attached? %>
+        <%= image_tag @swap.image, class: "img-fluid rounded-circle border border-2", alt: "#{@swap.title} image" %>
+      <% else %>
+        <%= image_tag "default_swap.jpg", size: "150x150", class: "img-fluid rounded-circle border border-2", alt: "Default swap photo" %>
+      <% end %>
+    </div>
+    <div class="col-md-10">
+      <h2 class="fw-bold mb-0"><%= @swap.title %></h2>
+    </div>
+  </div>
 
-<div class="md:w-2/3 w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+  <!-- Swap Details Section -->
+  <div class="mt-10 mb-5">
+    <div class="mt-5">
+      <h4 class="fw-semibold border-bottom pb-2 mb-3">Swap Details</h4>
+    </div>
+    <p><strong>Swap Group:</strong> <%= @swap.swap_group_id %></p>
+    <p><strong>Theme:</strong> <%= @swap.theme.to_s.split(',').map(&:strip).to_sentence %></p>
+    <p><strong>Deadline:</strong> <%= @swap.deadline&.strftime('%B %d, %Y') || "TBD" %>
+    <p><strong>Status:</strong> <%= @swap.status %></p>
+    <p><strong>Rules:</strong> <%= @swap.rules %></p>
+  </div>
+
+  <!-- Tasks Section --> 
+  <% user_tasks = current_user.user_swap_tasks.joins(:swap_task).where(swap_tasks: { swap_id: @swap.id }) %>
+
+  <% if user_tasks.any? %>
+    <div class="mb-5">
+      <h4 class="fw-semibold border-bottom pb-2 mb-3">Your Tasks</h4>
+
+      <% user_tasks.each do |task| %>
+        <div class="card mb-3 p-3">
+          <h5><%= task.swap_task.name %></h5>
+          <p><strong>Due:</strong> <%= task.swap_task.due_date.strftime('%B %d, %Y') %></p>
+
+          <%= form_with(model: task, url: user_swap_task_path(task), method: :patch, local: true) do |f| %>
+            <div class="mb-2">
+              <%= f.label :social_url, "Social Media Link" %>
+              <%= f.text_field :social_url, class: "form-control", placeholder: "https://instagram.com/yourpost" %>
+            </div>
+
+            <div class="form-check mb-2">
+              <%= f.check_box :completed, class: "form-check-input", id: "complete_task_#{task.id}" %>
+              <%= f.label :completed, "Mark as complete", class: "form-check-label" %>
+            </div>
+
+            <%= f.submit "Complete Task", class: "btn btn-outline-primary" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 
-  <h1 class="font-bold text-4xl">Showing swap</h1>
 
-  <%= render @swap %>
-
-  <%= link_to "Edit this swap", edit_swap_path(@swap), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to swaps", swaps_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <div class="sm:inline-block mt-2 sm:mt-0 sm:ml-2">
-    <%= button_to "Destroy this swap", @swap, method: :delete, class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+  <!-- Participants Section -->
+  <div class="mt-4">
+    <h4 class="fw-semibold border-bottom pb-2 mb-3">Participants</h4>
+    <% if @swap.swap_signups.any? %>
+      <ul class="list-group list-group-flush">
+        <% @swap.swap_signups.each do |signup| %>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <%= signup.user&.full_name || signup.email %>
+            <% if signup.user.nil? %>
+              <span class="badge rounded-pill bg-warning text-dark">Pending Account</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted fst-italic">None</p>
+    <% end %>
   </div>
+  
+
+  <!-- Social Feed Section -->
+  <div class="mt-5">
+  <h4 class="fw-semibold border-bottom pb-2 mb-3">Swap Feed</h4>
+
+  <% feed_posts = UserSwapTask.joins(:swap_task)
+                              .where(swap_tasks: { swap_id: @swap.id })
+                              .where.not(social_url: [nil, ""])
+                              .includes(:user, :swap_task)
+                              .order("swap_tasks.due_date ASC") %>
+
+  <% if feed_posts.any? %>
+    <div class="list-group" style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 0.5rem;">
+      <% feed_posts.each do |post| %>
+        <div class="list-group-item py-3">
+          <h6 class="mb-1 fw-semibold">
+            <%= post.user&.full_name || post.user&.email || "Anonymous" %>
+          </h6>
+          <p class="mb-1 text-muted"><strong><%= post.swap_task.name %></strong></p>
+          <a href="<%= post.social_url %>" target="_blank" rel="noopener" class="text-decoration-none text-primary">
+            View Social Post →
+          </a>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-muted fst-italic">No social posts have been submitted yet.</p>
+  <% end %>
+</div>
+
 </div>

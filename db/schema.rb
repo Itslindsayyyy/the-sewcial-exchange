@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_19_194339) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_19_224239) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -92,20 +92,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_194339) do
     t.index ["created_by_id"], name: "index_swap_groups_on_created_by_id"
   end
 
+  create_table "swap_signups", force: :cascade do |t|
+    t.string "email"
+    t.integer "swap_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["swap_id"], name: "index_swap_signups_on_swap_id"
+    t.index ["user_id"], name: "index_swap_signups_on_user_id"
+  end
+
   create_table "swap_tasks", force: :cascade do |t|
     t.integer "swap_id", null: false
     t.string "task_name"
     t.date "due_date"
-    t.integer "assigned_to_user_id", null: false
     t.boolean "completed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["assigned_to_user_id"], name: "index_swap_tasks_on_assigned_to_user_id"
     t.index ["swap_id"], name: "index_swap_tasks_on_swap_id"
   end
 
   create_table "swaps", force: :cascade do |t|
-    t.integer "swap_group_id", null: false
+    t.integer "swap_group_id"
     t.string "title"
     t.string "theme"
     t.datetime "deadline"
@@ -116,6 +124,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_194339) do
     t.integer "created_by_id"
     t.string "form_url"
     t.string "sheet_id"
+    t.string "sheet_url"
+    t.date "start_date"
+    t.date "shipping_deadline"
+    t.string "hashtag_1"
+    t.string "hashtag_2"
+    t.string "hashtag_3"
     t.index ["swap_group_id"], name: "index_swaps_on_swap_group_id"
   end
 
@@ -134,6 +148,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_194339) do
     t.boolean "completed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "social_url"
     t.index ["swap_task_id"], name: "index_user_swap_tasks_on_swap_task_id"
     t.index ["user_id"], name: "index_user_swap_tasks_on_user_id"
   end
@@ -169,7 +184,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_194339) do
   add_foreign_key "group_memberships", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "swap_groups", "users", column: "created_by_id"
-  add_foreign_key "swap_tasks", "assigned_to_users"
+  add_foreign_key "swap_signups", "swaps"
+  add_foreign_key "swap_signups", "users"
   add_foreign_key "swap_tasks", "swaps"
   add_foreign_key "swaps", "swap_groups"
   add_foreign_key "user_roles", "roles"

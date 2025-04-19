@@ -1,4 +1,5 @@
 class UserSwapTasksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user_swap_task, only: %i[ show edit update destroy ]
 
   # GET /user_swap_tasks or /user_swap_tasks.json
@@ -36,14 +37,10 @@ class UserSwapTasksController < ApplicationController
 
   # PATCH/PUT /user_swap_tasks/1 or /user_swap_tasks/1.json
   def update
-    respond_to do |format|
-      if @user_swap_task.update(user_swap_task_params)
-        format.html { redirect_to @user_swap_task, notice: "User swap task was successfully updated." }
-        format.json { render :show, status: :ok, location: @user_swap_task }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user_swap_task.errors, status: :unprocessable_entity }
-      end
+    if @user_swap_task.update(user_swap_task_params)
+      redirect_back fallback_location: swap_path(@user_swap_task.swap_task.swap), notice: "Task updated!"
+    else
+      redirect_back fallback_location: swap_path(@user_swap_task.swap_task.swap), alert: "Something went wrong."
     end
   end
 
@@ -58,13 +55,14 @@ class UserSwapTasksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user_swap_task
-      @user_swap_task = UserSwapTask.find(params.expect(:id))
-    end
 
     # Only allow a list of trusted parameters through.
     def user_swap_task_params
-      params.expect(user_swap_task: [ :user_id, :swap_task_id, :completed ])
+      params.require(:user_swap_task).permit(:user_id, :swap_task_id, :completed, :social_url)
+    end
+
+    # Restrict access to tasks owned by the current user
+    def set_user_swap_task
+      @user_swap_task = current_user.user_swap_tasks.find(params[:id])
     end
 end

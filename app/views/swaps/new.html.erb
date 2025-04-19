@@ -11,25 +11,24 @@
     <!-- Theme -->
     <div class="mb-4">
       <span class="fw-semibold d-block mb-2">Theme:</span>
-      <% selected = @selected_themes || [] %>
-      
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_mini_quilt" value="mini quilt">
-        <label class="form-check-label" for="theme_mini_quilt">mini quilt</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_seasonal" value="seasonal">
-        <label class="form-check-label" for="theme_seasonal">seasonal</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_blocks" value="blocks">
-        <label class="form-check-label" for="theme_blocks">blocks</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" name="swap[theme][]" id="theme_other" value="other">
-        <label class="form-check-label" for="theme_other">other</label>
-      </div>
+      <% selected = @swap.theme.to_s.split(',').map(&:strip) %>
+    
+      <% ['mini quilt', 'seasonal', 'blocks', 'other'].each do |option| %>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="swap[theme][]"
+            id="theme_<%= option.parameterize %>"
+            value="<%= option %>"
+            <%= 'checked' if selected.include?(option) %>>
+          <label class="form-check-label" for="theme_<%= option.parameterize %>">
+            <%= option %>
+          </label>
+        </div>
+      <% end %>
     </div>
+    
 
     <!-- Upload Photo -->
     <div class="mb-4">
@@ -37,10 +36,16 @@
       <%= form.file_field :image, class: "form-control w-auto d-inline-block" %>
     </div>
 
-    <!-- Google Form URL -->
+    <!-- Google Sheet URL -->
     <div class="mb-4">
-      <%= form.label :form_url, "Google Sign-up Form URL", class: "fw-semibold" %>
-      <%= form.url_field :form_url, class: "form-control" %>
+      <%= form.label :sheet_url, "Google Sheet URL (linked to your form responses)", class: "fw-semibold" %>
+      <%= form.text_field :sheet_url, class: "form-control", placeholder: "https://docs.google.com/spreadsheets/d/..." %>
+      <% if @swap.errors[:sheet_url].present? %>
+        <div class="text-danger mt-1">
+          <%= @swap.errors[:sheet_url].first %>
+        </div>
+      <% end %>
+      <small class="text-muted">Use the link to the responses spreadsheet, not the Google form URL.</small>
     </div>
 
     <!-- Dates -->
@@ -65,45 +70,58 @@
 
     <!-- Tasks -->
     <div class="mb-4">
-    <span class="fw-semibold d-block mb-2">Tasks:</span>
-  
-    <div id="tasks-container">
-      <div class="row mb-2 task-row">
-        <div class="col-md-6">
-          <input type="text" name="swap[tasks_attributes][][name]" class="form-control" placeholder="Task name">
+      <span class="fw-semibold d-block mb-2">Tasks:</span>
+      
+      <div id="tasks-container">
+      <% if @swap.swap_tasks.any? %>
+        <% @swap.swap_tasks.each do |task| %>
+          <div class="row mb-2 task-row">
+            <div class="col-md-6">
+              <input type="text" name="swap[swap_tasks_attributes][][task_name]" class="form-control" placeholder="Task name" value="<%= task.task_name %>">
+            </div>
+            <div class="col-md-6">
+              <input type="date" name="swap[swap_tasks_attributes][][due_date]" class="form-control" value="<%= task.due_date %>">
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="row mb-2 task-row">
+          <div class="col-md-6">
+            <input type="text" name="swap[swap_tasks_attributes][][task_name]" class="form-control" placeholder="Task name">
+          </div>
+          <div class="col-md-6">
+            <input type="date" name="swap[swap_tasks_attributes][][due_date]" class="form-control">
+          </div>
         </div>
-        <div class="col-md-6">
-          <input type="date" name="swap[tasks_attributes][][due_date]" class="form-control" placeholder="Due date">
-        </div>
-      </div>
+      <% end %>
     </div>
-  
-    <button type="button" id="add-task" class="btn btn-outline-info btn-sm mt-2">+ Add Another Task</button>
-  </div>
+    
 
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const addTaskBtn = document.getElementById("add-task");
-    const tasksContainer = document.getElementById("tasks-container");
+      <button type="button" id="add-task" class="btn btn-outline-info btn-sm mt-2">+ Add Another Task</button>
+    </div>
 
-    addTaskBtn.addEventListener("click", function () {
-      const newTaskRow = document.createElement("div");
-      newTaskRow.classList.add("row", "mb-2", "task-row");
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const addTaskBtn = document.getElementById("add-task");
+        const tasksContainer = document.getElementById("tasks-container");
 
-      newTaskRow.innerHTML = `
-        <div class="col-md-6">
-          <input type="text" name="swap[tasks_attributes][][name]" class="form-control" placeholder="Task name">
-        </div>
-        <div class="col-md-6">
-          <input type="date" name="swap[tasks_attributes][][due_date]" class="form-control" placeholder="Due date">
-        </div>
-      `;
+        addTaskBtn.addEventListener("click", function () {
+          const newTaskRow = document.createElement("div");
+          newTaskRow.classList.add("row", "mb-2", "task-row");
 
-      tasksContainer.appendChild(newTaskRow);
-    });
-  });
-</script>
+          newTaskRow.innerHTML = `
+            <div class="col-md-6">
+              <input type="text" name="swap[swap_tasks_attributes][][task_name]" class="form-control" placeholder="Task name">
+            </div>
+            <div class="col-md-6">
+              <input type="date" name="swap[swap_tasks_attributes][][due_date]" class="form-control">
+            </div>
+          `;
 
+          tasksContainer.appendChild(newTaskRow);
+        });
+      });
+    </script>
 
     <!-- Rules -->
     <div class="mb-5">

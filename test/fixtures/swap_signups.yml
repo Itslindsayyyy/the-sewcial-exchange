@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  email: MyString
+  swap: one
+  user: one
+
+two:
+  email: MyString
+  swap: two
+  user: two

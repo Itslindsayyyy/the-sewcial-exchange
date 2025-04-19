@@ -2,12 +2,21 @@ class SwapsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :index]
   before_action :set_swap, only: %i[ show edit update destroy ]
 
+  def new
+    @swap = Swap.new
+    @swap.swap_tasks.build # to show one task field by default
+  end
+  
+
   def index
     @swaps = Swap.all
   end
 
-  def show
-  end
+def show
+  @swap = Swap.find(params[:id])
+  # if you need it: @participants = @swap.swap_signups
+end
+
 
   def index
     @swaps = Swap.where(status: "active").order(deadline: :asc)
@@ -19,24 +28,25 @@ class SwapsController < ApplicationController
   
 
   def create
-    if params[:swap][:theme].is_a?(Array)
-      params[:swap][:theme] = params[:swap][:theme].join(", ")
-    end
-
     @swap = Swap.new(swap_params)
-    @swap.created_by_id = current_user.id #assigns current user as host
+    @swap.created_by_id = current_user.id
+  
+    # convert theme array to comma-separated string if needed
+    @swap.theme = @swap.theme.join(", ") if @swap.theme.is_a?(Array)
+  
+    # Use shipping deadline as default for deadline
+    @swap.deadline = @swap.shipping_deadline if @swap.deadline.blank?
 
-
-    respond_to do |format|
-      if @swap.save
-        format.html { redirect_to @swap, notice: "Swap was successfully created." }
-        format.json { render :show, status: :created, location: @swap }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @swap.errors, status: :unprocessable_entity }
-      end
+    if @swap.save
+      redirect_to @swap, notice: "Swap was successfully created."
+    else
+      Rails.logger.debug "⚠️ SWAP VALIDATION ERRORS: #{@swap.errors.full_messages}"
+      render :new, status: :unprocessable_entity
     end
   end
+  
+  
+  
 
   def update
     if params[:swap][:theme].is_a?(Array)
@@ -71,8 +81,22 @@ class SwapsController < ApplicationController
 
     def swap_params
       params.require(:swap).permit(
-        :swap_group_id, :title, :theme, :deadline, :status, :rules,
-        swap_tasks_attributes: [:name, :due_date]
+        :title,
+        :image,
+        :sheet_url,
+        :sheet_id,
+        :start_date,
+        :shipping_deadline,
+        :hashtag_1,
+        :hashtag_2,
+        :hashtag_3,
+        :rules,
+        :status,
+        :deadline,
+        theme: [],
+
+        swap_tasks_attributes: [:id, :task_name, :due_date, :_destroy]
       )
     end
+    
 end

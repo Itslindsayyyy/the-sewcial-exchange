@@ -58,13 +58,11 @@ class SwapTasksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_swap_task
-      @swap_task = SwapTask.find(params.expect(:id))
-    end
-
-    # Only allow a list of trusted parameters through.
-    def swap_task_params
-      params.expect(swap_task: [ :swap_id, :task_name, :due_date, :assigned_to_user_id, :completed ])
-    end
-end
+  def set_swap_task
+    @swap_task = SwapTask.find(params[:id])
+  end
+  
+  def swap_task_params
+    params.require(:swap_task).permit(:swap_id, :task_name, :due_date, :assigned_to_user_id, :completed)
+  end
+  

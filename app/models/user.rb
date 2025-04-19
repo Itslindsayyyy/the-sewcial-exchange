@@ -18,4 +18,15 @@ class User < ApplicationRecord
   has_many :user_swap_tasks
   has_many :notifications
   has_many :feedback_forms
+  has_many :swap_signups, dependent: :nullify
+
+
+  after_create :link_pending_swap_signups
+
+  def link_pending_swap_signups
+    SwapSignup.where(email: self.email.downcase, user_id: nil).find_each do |signup|
+      signup.update(user: self)
+      signup.swap.users << self unless signup.swap.users.include?(self)
+    end
+  end
 end

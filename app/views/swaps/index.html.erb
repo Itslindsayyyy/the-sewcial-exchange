@@ -17,9 +17,9 @@
             <tr>
               <td class="d-flex align-items-center gap-3">
                 <% if swap.image.attached? %>
-                <%= image_tag swap.image.variant(resize_to_fill: [60, 60]), class: "rounded border", alt: "#{swap.title} image" %>
+                <%= image_tag swap.image.variant(resize_to_fill: [60, 60]), class: "rounded-circle border", alt: "#{swap.title} image" %>
               <% else %>
-                <%= image_tag "default_swap.jpg", size: "60x60", class: "rounded border", alt: "Default swap photo" %>
+                <%= image_tag "default_swap.jpg", size: "60x60", class: "rounded-circle border", alt: "Default swap photo" %>
               <% end %>
             
                 <%= swap.title %>

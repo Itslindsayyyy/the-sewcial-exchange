@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :group_memberships
   resources :swaps
   resources :swap_tasks
-  resources :user_swap_tasks
+  resources :user_swap_tasks, only: [:update]
 
   # System features
   resources :notifications, only: [:index, :show]
