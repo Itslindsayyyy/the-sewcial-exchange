@@ -20,10 +20,15 @@ production:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
 
+# 👇 These are required for SolidCable, SolidQueue, and SolidCache
 cable:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
 
 queue:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
+
+cache:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
