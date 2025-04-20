@@ -9,8 +9,9 @@ class SwapsController < ApplicationController
 
 
   def index
-    @swaps = Swap.all
+    @swaps = Swap.all.order(created_at: :desc)
   end
+  
 
 def show
   @swap = Swap.find(params[:id])
