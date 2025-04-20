@@ -4,8 +4,12 @@ default: &default
 
 development:
   <<: *default
-  adapter: sqlite3
-  database: db/development.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  host: dpg-d023h63uibrs73aggscg-a.ohio-postgres.render.com
+  database: sewcial
+  username: sewcial_user
+  password: h3q9I2GHeopgLUKBEprTiOZhPi7kyc1R
 
 test:
   <<: *default
@@ -14,6 +18,4 @@ test:
 
 production:
   <<: *default
-  adapter: postgresql
-  encoding: unicode
   url: <%= ENV["DATABASE_URL"] %>
