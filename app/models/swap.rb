@@ -11,12 +11,12 @@ class Swap < ApplicationRecord
 
   accepts_nested_attributes_for :swap_tasks, allow_destroy: true
 
-  VALID_SHEET_URL_REGEX = /\Ahttps:\/\/docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+\//
+  VALID_SHEET_URL_REGEX = /\Ahttps:\/\/docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9_-]+\//
 
-  validates :sheet_url, format: {
-    with: VALID_SHEET_URL_REGEX,
-    message: "must be a valid Google Sheet link (starting with https://docs.google.com/spreadsheets/d/...)"
-  }, allow_blank: true
+validates :sheet_url, format: {
+  with: VALID_SHEET_URL_REGEX,
+  message: "must be a valid Google Sheet link (starting with https://docs.google.com/spreadsheets/d/...)"
+}, allow_blank: true
 
   # Automatically set sheet_id from sheet_url if it's present
   before_validation :set_sheet_id_from_url
