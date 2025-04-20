@@ -66,3 +66,4 @@ class SwapTasksController < ApplicationController
     params.require(:swap_task).permit(:swap_id, :task_name, :due_date, :assigned_to_user_id, :completed)
   end
   
+end
