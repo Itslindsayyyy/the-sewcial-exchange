@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_19_224239) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_20_012535) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -84,6 +84,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_224239) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "solid_queue_jobs", force: :cascade do |t|
+    t.string "queue_name", null: false
+    t.string "job_class", null: false
+    t.jsonb "arguments", default: [], null: false
+    t.datetime "scheduled_at"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.datetime "discarded_at"
+    t.datetime "retried_at"
+    t.integer "attempts", default: 0, null: false
+    t.integer "priority", default: 0, null: false
+    t.string "state", default: "queued", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["queue_name"], name: "index_solid_queue_jobs_on_queue_name"
+    t.index ["scheduled_at"], name: "index_solid_queue_jobs_on_scheduled_at"
+    t.index ["state"], name: "index_solid_queue_jobs_on_state"
   end
 
   create_table "swap_groups", force: :cascade do |t|
